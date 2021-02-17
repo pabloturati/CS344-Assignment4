@@ -1,21 +1,18 @@
-# CS344-Assignment3
-CS344-Assignment 3 smallsh\
+# CS344-Assignment4
+CS344-Assignment 4 Multi-threaded Producer Consumer Pipeline\
 Author: Pablo Turati - turatip@oregonstate.edu\
 Licence: MIT. Refer to `LICENSE` for details.
 
 ## Project Description
 
-`smallsh` is a simplified terminal application that provides the following functionality:
+`Multi-threaded Producer Consumer Pipeline` is a simple multi-threaded program that performs the following operations:
 
-- Prompt for running commands
-- Handles blank lines and comments (lines beginning with the `#` character)
-- Expands the PID `$$` variable.
-- Executes `exit`, `cd` and `status` via built in code into the shell
-- Executes other commands by creating new processes using exec() functions.
-- Supports IO redirection
-- Supports running commands in foreground and background processes
-- Implements custom handlers for SIGINT and SIGTSTP 
+- calls an Input Thread, reads in lines of characters from the standard input
+- calls a Line Separator Thread, replacing every line separator in the input by a space.
+- calls a Plus Sign thread, replacing every pair of plus signs, i.e., "++", by a "^"
+- calls the Output Thread, writes this processed data to standard output as lines of exactly 80 characters.
 
+Intercommunication between thereads is done by using the Producer-Consumer approach.
 
 ## Compile instructions
 
@@ -73,18 +70,6 @@ root
 ├── constants
 │   ├── constants.c
 │   └── constants.h
-├── activeProcessHandlers
-│   ├── activeProcessHandlers.c
-│   └── activeProcessHandlers.h
-├── ioHandlerMethods
-│   ├── ioHandlerMethods.c
-│   └── ioHandlerMethods.h
-├── signalHandlers
-│   ├── signalHandlers.c
-│   └── signalHandlers.h
-├── subProcessHandlers
-│   ├── subProcessHandlers.c
-│   └── subProcessHandlers.h
 └── builtinFunctions
     ├── builtinFunctions.c
     └── builtinFunctions.h
@@ -93,4 +78,4 @@ root
 
 ## Version control
 
- Link to the repository is available at [here](https://github.com/pabloturati/CS344-Assignment3).  However, due to this being an Oregon State University assignment, it will remain private and public access will become available after April, 2021.
+ Link to the repository is available at [here](https://github.com/pabloturati/CS344-Assignment4).  However, due to this being an Oregon State University assignment, it will remain private and public access will become available after April, 2021.

@@ -56,7 +56,7 @@ dkms.conf
 .prettierignore
 
 # Compiled files
-smallsh
+line_processor
 
 # Markdown outputs
 README.jpeg
@@ -67,5 +67,4 @@ README.pdf
 
 # Process file outputs
 turatip.movies.*
-junk*
-mytestresults
+testfile.txt

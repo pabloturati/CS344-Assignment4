@@ -2,26 +2,16 @@
 
 # Build data
 preCompilePackage="component_archive"
-executableFilename="smallsh"
+executableFilename="line_processor"
 mainFilename="main.c"
 testOutputFiles="
   *.o 
   *.a 
-  junk* 
-  mytestresults 
-  myModifiedTestresults 
-  testfile.txt 
-  ~/testdir*"
+  testfile.txt
+  "
 
 # Components
-declare -a componentList=(
-  "constants"
-  "ioHandlerMethods"
-  "subProcessHandlers"
-  "builtinFunctions"
-  "signalHandlers"
-  "activeProcessHandlers"
-)
+declare -a componentList=("")
 
 # Cleans previously compiled files and created folders
 function preCompileClean() {
@@ -61,8 +51,11 @@ function main() {
   preCompileClean
 
   # Compilation step
-  generateModuleObjectsAndArchive
-  compileMainAndArchive
+  # generateModuleObjectsAndArchive
+  # compileMainAndArchive
+
+  # fix remove
+  gcc --std=gnu99 -o $executableFilename $mainFilename
 
   # Pre cleaning to eliminate temporary files
   postCompileClean
@@ -76,11 +69,11 @@ function main() {
   #  c -> performs only cleaning of compilation files and creted test files
   while getopts "evtrc" flag; do
     case $flag in
-    e) ./$executableFilename ;;
+    e) ./$executableFilename <./testfiles/input1.txt ;;
     v) valgrind ./$executableFilename ;;
-    t) ./p3testscript 2>&1 ;;
-    r) ./p3testscript >mytestresults 2>&1 ;;
-    c) preCompileClean && postCompileClean ;;
+    t) ./$executableFilename <./testfiles/input1.txt >testfile.txt ;;
+    r) ;;
+    c) ;;
     esac
     shift
   done
