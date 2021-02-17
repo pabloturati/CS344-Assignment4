@@ -5,33 +5,53 @@
 #include <signal.h>
 #include <unistd.h>
 // #include "constants/constants.h"
-#define BUFFER_SIZE 1001
+#define BUFFER_SIZE 1000
 #define PRINT_SIZE 80
+#define MAX_LINES 48
 
 //Initialize mutex and conditional variable
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t bufferHasContent = PTHREAD_COND_INITIALIZER;
+// pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+// pthread_cond_t bufferHasContent = PTHREAD_COND_INITIALIZER;
+
+char lines[MAX_LINES][BUFFER_SIZE];
 
 static int strCount = 0;
+static int replaceLineBreakCount = 0;
+static int replaceSignsCount = 0;
+static int printCount = 0;
+static int printPos = 0;
 
-void *readLine(void *buffer)
+void *handleReadLine(void *args)
 {
-  pthread_mutex_lock(&mutex);
-  fgets(buffer, BUFFER_SIZE, stdin);
-  strCount += 1;
-  pthread_cond_signal(&bufferHasContent);
-  pthread_mutex_unlock(&mutex);
+  char *buffer = (char *)malloc(BUFFER_SIZE * sizeof(char));
+  // pthread_mutex_lock(&mutex);
+  while (fgets(buffer, BUFFER_SIZE, stdin) && strcmp(buffer, "STOP\n") != 0)
+  {
+    strcpy(lines[strCount], buffer);
+    strCount += 1;
+  }
+  // pthread_mutex_unlock(&mutex);
+  free(buffer);
   return NULL;
 }
 
-void *replaceLineSeparatorBySpace(void *buffer)
+void replaceLineSeparatorBySpace()
 {
-  char *pos = strchr(buffer, '\n');
+  char *pos = strchr(lines[replaceLineBreakCount], '\n');
   *pos = ' ';
+}
+
+void *replaceLineSeparatorBySpaceHandler()
+{
+  while (replaceLineBreakCount < strCount)
+  {
+    replaceLineSeparatorBySpace();
+    ++replaceLineBreakCount;
+  }
   return NULL;
 }
 
-void shiftString(char *buffer, char *pos)
+void shiftString(char *pos)
 {
   char *next = pos + sizeof(char);
   char *secondNext = next + sizeof(char);
@@ -43,76 +63,87 @@ void shiftString(char *buffer, char *pos)
   }
 }
 
-void *replacePlusSignPairs(void *buffer)
+void replacePlusSignPairs()
 {
 
-  char *pos = strstr(buffer, "++");
+  char *pos = strstr(lines[replaceSignsCount], "++");
   while (pos != NULL)
   {
     *pos = '^';
-    shiftString(buffer, pos);
-    pos = strstr(buffer, "++");
+    shiftString(pos);
+    pos = strstr(lines[replaceSignsCount], "++");
+  }
+}
+
+void *handleReplacePlusSignPairs(void *args)
+{
+  while (replaceSignsCount < replaceLineBreakCount)
+  {
+    replacePlusSignPairs();
+    ++replaceSignsCount;
   }
   return NULL;
 }
 
-void printLimitedCharOutput(void *buffer)
+void printLimitedCharOutput()
 {
-  int counter = 0;
-  int endIdx = PRINT_SIZE;
-  char *printBuff = (char *)calloc(PRINT_SIZE, sizeof(char));
-  int buffLength = strlen(buffer);
-  char *start;
-  while (endIdx <= buffLength)
+  char *line = lines[printCount];
+  int lineLength = strlen(line);
+
+  int currIdx = 0;
+  while (currIdx < lineLength)
   {
-    start = &buffer[counter];
-    strncpy(printBuff, start, endIdx - counter);
-    fprintf(stdout, "%s\n", printBuff);
-    counter = endIdx;
-    endIdx += PRINT_SIZE;
+    printf("%c", line[currIdx]);
+    ++currIdx;
+    ++printPos;
+    if (printPos % PRINT_SIZE == 0)
+    {
+      printf("\n");
+    }
   }
-  if (endIdx <= buffLength + PRINT_SIZE)
-  {
-    start = &buffer[counter];
-    strncpy(printBuff, start, endIdx - counter);
-    fprintf(stdout, "%s", printBuff);
-    counter = endIdx;
-    endIdx += PRINT_SIZE;
-  }
-  free(printBuff);
-  strCount -= 1;
 }
 
-void *handlePrintLimitedCharOutput(void *buffer)
+void *handlePrintLimitedCharOutput()
 {
 
-  pthread_mutex_lock(&mutex);
-  while (strCount == 0)
-    pthread_cond_wait(&bufferHasContent, &mutex);
-  printLimitedCharOutput(buffer);
-  pthread_mutex_unlock(&mutex);
+  // pthread_mutex_lock(&mutex);
+  // while (strCount == 0)
+  // pthread_cond_wait(&bufferHasContent, &mutex);
+
+  while (printCount < strCount)
+  {
+    printLimitedCharOutput();
+    ++printCount;
+  }
+
+  // pthread_mutex_unlock(&mutex);
   return NULL;
 }
 
 int main(void)
 {
-  char *buffer = (char *)malloc(BUFFER_SIZE * sizeof(char));
   pthread_t readLineThreadId, replaceLineSeparatorBySpaceThreadId, replacePlusSignPairsThreadId, printToStdOutThreadId;
 
   // Readline thread
-  pthread_create(&readLineThreadId, NULL, readLine, buffer);
-  // // Replace endline for spaces thread
-  // pthread_create(&replaceLineSeparatorBySpaceThreadId, NULL, replaceLineSeparatorBySpace, buffer);
-  // // Replace '++' for '^' spaces thread
-  // pthread_create(&replacePlusSignPairsThreadId, NULL, replacePlusSignPairs, buffer);
-  // Print output to stdout therad
-  pthread_create(&printToStdOutThreadId, NULL, handlePrintLimitedCharOutput, buffer);
+  pthread_create(&readLineThreadId, NULL, handleReadLine, NULL);
 
-  pthread_join(readLineThreadId, NULL);
-  // pthread_join(replaceLineSeparatorBySpaceThreadId, NULL);
-  // pthread_join(replacePlusSignPairsThreadId, NULL);
+  // Replace endline for spaces thread
+  pthread_create(&replaceLineSeparatorBySpaceThreadId, NULL, replaceLineSeparatorBySpaceHandler, NULL);
+  pthread_join(replaceLineSeparatorBySpaceThreadId, NULL);
+
+  // Replace '++' for '^' spaces thread
+  pthread_create(&replacePlusSignPairsThreadId, NULL, handleReplacePlusSignPairs, NULL);
+  pthread_join(replacePlusSignPairsThreadId, NULL);
+
+  // Print output to stdout therad
+  pthread_create(&printToStdOutThreadId, NULL, handlePrintLimitedCharOutput, NULL);
   pthread_join(printToStdOutThreadId, NULL);
 
-  free(buffer);
+  // printf("HERE\n");
+  // for (int i = 0; i < strCount; i++)
+  // {
+  //   printf("Line %d:  %s", i, lines[i]);
+  // }
+
   return 0;
 }
