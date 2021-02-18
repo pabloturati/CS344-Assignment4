@@ -9,6 +9,7 @@
 #include "../dataProcessingMethods/dataProcessingMethods.h"
 #include "../threadHandlerMethods/threadHandlerMethods.h"
 
+// Thread handler that reads each line from standard in. Places a TERM flag at the end of the read process
 void *handleReadLine(void *args)
 {
   char *line = (char *)malloc(BUFFER_SIZE * sizeof(char));
@@ -23,6 +24,7 @@ void *handleReadLine(void *args)
   return NULL;
 }
 
+// Thread handler that takes each line passed from the input reader thread and replaces endline characters for spaces.
 void *replaceLineSeparatorBySpaceHandler(void *args)
 {
   char *line;
@@ -35,6 +37,7 @@ void *replaceLineSeparatorBySpaceHandler(void *args)
   return NULL;
 }
 
+// Thread handler that takes each line passed from the replace line separator thread and replaces "++" symbol pairs for "^".
 void *handleReplacePlusSignPairs(void *args)
 {
   char *line;
@@ -47,6 +50,7 @@ void *handleReplacePlusSignPairs(void *args)
   return NULL;
 }
 
+// Thread handler that takes each line passed from the "++" symbol pair replacement thread and prints the output to std in.
 void *handlePrintLimitedCharOutput(void *args)
 {
   char *line;
@@ -55,6 +59,5 @@ void *handlePrintLimitedCharOutput(void *args)
     line = get_buff_3();
     printLimitedCharOutput(line);
   } while (!isTermFlag(line));
-
   return NULL;
 }
