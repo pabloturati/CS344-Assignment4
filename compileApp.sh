@@ -48,7 +48,7 @@ function generateModuleObjectsAndArchive() {
 
 # Compiles main
 function compileMainAndArchive() {
-  gcc --std=gnu99 -o $executableFilename $mainFilename ${preCompilePackage}.a
+  gcc --std=gnu99 -pthread -o $executableFilename $mainFilename ${preCompilePackage}.a
 }
 
 function main() {
