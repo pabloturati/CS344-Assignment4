@@ -6,17 +6,21 @@
 #include <unistd.h>
 #include "../constants/constants.h"
 
-// Replace data by space helper methods
+int PRINT_BUFFER_SIZE = BUFFER_SIZE + PRINT_SIZE;
 
+/****** Replace line break helper methods *******/
+
+// Replaces line breaks (if any) for space characters
 void replaceLineSeparatorBySpace(char *line)
 {
-  char *pos = strchr(line, '\n');
+  char *pos = strchr(line, LINE_BREAK_CHATACTER);
   if (pos != NULL)
-    *pos = ' ';
+    *pos = SPACE_CHARACTER;
 }
 
-// Replace ++ by ^ helper methods
+/****** Replace "++" symbol pair helper methods *******/
 
+// Shift and string (array) one position left from the position give by the pos pointer
 void shiftString(char *pos)
 {
   char *next = pos + sizeof(char);
@@ -29,49 +33,75 @@ void shiftString(char *pos)
   }
 }
 
+// Finds every ++ sign pair, changes it for the ^ symbol.
 void replacePlusSignPairs(char *line)
 {
 
-  char *pos = strstr(line, "++");
+  char *pos = strstr(line, PLUS_PLUS_SYMBOL);
   while (pos != NULL)
   {
-    *pos = '^';
+    *pos = UP_ARROY_CHARACTER;
     shiftString(pos);
-    pos = strstr(line, "++");
+    pos = strstr(line, PLUS_PLUS_SYMBOL);
   }
 }
 
-void printLimitedCharOutput(char *line)
+/****** Print to standard out helper methods *******/
+
+// Merges incomplete lefover print from previous run (if any)
+void mergeIncompletePrint(char mergedLine[], char *line)
 {
-  int BUF_SIZE = BUFFER_SIZE + PRINT_SIZE;
-  char mergedLine[BUF_SIZE];
+  // Chefks if there is a remainder from previous print, concatenate it.
   if (rem != NULL)
   {
     // Merge previous remainder to line
-    snprintf(mergedLine, BUF_SIZE, "%s%s", rem, line);
+    snprintf(mergedLine, PRINT_BUFFER_SIZE, "%s%s", rem, line);
     free(rem);
   }
   else
-  {
-    snprintf(mergedLine, BUF_SIZE, "%s", line);
-  }
+    snprintf(mergedLine, PRINT_BUFFER_SIZE, "%s", line);
+}
 
+// Saves incomplete lefover print from previous run to be used in next thread call.
+void saveIncompletePrintout(int lineLength, char *mergedLine, int pos)
+{
+  // Checks if there is a remainder from the last print out and, if so, save it
+  if (lineLength % PRINT_SIZE > 0)
+  {
+    rem = calloc(PRINT_SIZE, sizeof(char));
+    char *incomStr = &mergedLine[pos * PRINT_SIZE];
+    strcpy(rem, incomStr);
+  }
+}
+
+// Handles the print operation of each line to standard out
+void printLimitedCharOutput(char *line)
+{
+  // Allocate memory to concatename previous printout remainder with new line
+  char mergedLine[PRINT_BUFFER_SIZE];
+  mergeIncompletePrint(mergedLine, line);
+
+  // Calculate total print length
   int lineLength = strlen(mergedLine);
+
+  // Calculate full 80 char lines
   int heigth = lineLength / PRINT_SIZE;
+
+  // Temporary print buffer to store the 80 characters to be printed
   char *tempBuff = calloc(PRINT_SIZE + 1, sizeof(char));
 
+  // Index of the intire print
   int currIdx = 0;
 
+  // Line height index
   int i = 0;
   for (i = 0; i < heigth; i++)
   {
+    // Save the 80 characters to temporary mememory location
     strncpy(tempBuff, mergedLine + currIdx + (i * PRINT_SIZE), PRINT_SIZE);
+    // Print to std out the 80 characters
     fprintf(stdout, "%s\n", tempBuff);
   }
-  {
-    rem = calloc(PRINT_SIZE, sizeof(char));
-    char *incomStr = &mergedLine[i * PRINT_SIZE];
-    strcpy(rem, incomStr);
-  }
+  saveIncompletePrintout(lineLength, mergedLine, i);
   free(tempBuff);
 }

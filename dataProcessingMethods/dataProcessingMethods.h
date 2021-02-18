@@ -1,8 +1,8 @@
 #ifndef DATA_PROCESSING_METHODS_H
 #define DATA_PROCESSING_METHODS_H
 
-void replaceLineSeparatorBySpace(char *line);
-void replacePlusSignPairs(char *line);
-void printLimitedCharOutput(char *line);
+void replaceLineSeparatorBySpace(char *);
+void replacePlusSignPairs(char *);
+void printLimitedCharOutput(char *);
 
 #endif

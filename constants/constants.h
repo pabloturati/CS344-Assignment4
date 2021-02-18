@@ -1,14 +1,21 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
-// #include <pthread.h>
 #define BUFFER_SIZE 1000
 #define PRINT_SIZE 80
 #define MAX_LINES 48
 #define STOP_SYMBOL "STOP\n"
 #define TERM_SYMBOL "TERM"
+#define LINE_BREAK_CHATACTER '\n'
+#define SPACE_CHARACTER ' '
+#define PLUS_PLUS_SYMBOL "++"
+#define UP_ARROY_CHARACTER '^'
 
-// Print to stdout helper methods
+/****** General global variables *******/
+
+// Print to standard out remainder global variable
 char *rem;
+
+/****** Mutex and conditional variables *******/
 
 extern char buffer_1[MAX_LINES][BUFFER_SIZE];
 int count_1;
