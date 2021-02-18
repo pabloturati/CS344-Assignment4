@@ -1,4 +1,5 @@
 #include <pthread.h>
+#include <string.h>
 #include "constants.h"
 
 // Buffer 1.  Shared between 'get input' and 'replace line separators'
@@ -39,3 +40,15 @@ int con_idx_3 = 0;
 pthread_mutex_t mutex_3 = PTHREAD_MUTEX_INITIALIZER;
 // Initialize the condition variable for buffer 1
 pthread_cond_t full_3 = PTHREAD_COND_INITIALIZER;
+
+/*****   String comparison methods  ****/
+
+int strEquals(char *str1, char *str2)
+{
+  return (strcmp(str1, str2) == 0);
+}
+
+int isTermFlag(char *line)
+{
+  return strEquals(line, TERM_SYMBOL);
+}

@@ -68,10 +68,6 @@ void printLimitedCharOutput(char *line)
     strncpy(tempBuff, mergedLine + currIdx + (i * PRINT_SIZE), PRINT_SIZE);
     fprintf(stdout, "%s\n", tempBuff);
   }
-
-  // fprintf(stdout, "HOLA3\n");
-
-  // If has a remainder, save it if (lineLength % PRINT_SIZE > 0)
   {
     rem = calloc(PRINT_SIZE, sizeof(char));
     char *incomStr = &mergedLine[i * PRINT_SIZE];

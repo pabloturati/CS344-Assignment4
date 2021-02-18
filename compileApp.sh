@@ -15,6 +15,7 @@ declare -a componentList=(
   "constants"
   "dataProcessingMethods"
   "bufferHandlers"
+  "threadHandlerMethods"
 )
 
 # Cleans previously compiled files and created folders

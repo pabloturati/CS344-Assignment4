@@ -1,9 +1,11 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
-#include <pthread.h>
+// #include <pthread.h>
 #define BUFFER_SIZE 1000
 #define PRINT_SIZE 80
 #define MAX_LINES 48
+#define STOP_SYMBOL "STOP\n"
+#define TERM_SYMBOL "TERM"
 
 // Print to stdout helper methods
 char *rem;
@@ -29,11 +31,7 @@ int con_idx_3;
 pthread_mutex_t mutex_3;
 pthread_cond_t full_3;
 
-void put_buff_1(char *line);
-char *get_buff_1();
-void put_buff_2(char *line);
-char *get_buff_2();
-void put_buff_3(char *line);
-char *get_buff_3();
+int strEquals(char *, char *);
+int isTermFlag(char *);
 
 #endif
