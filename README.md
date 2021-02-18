@@ -43,10 +43,10 @@ Refer to the contents of `compileApp.sh` for a detailed command list on how to m
 ### Compile run available commands
 
 The following flags can be passed to the compileApp.sh shell script:
-   -e : run executable getting standard in from input1 testfile
-   -v : run executable with valgrind leak analysis
-   -t : run executable and then run test script (see section Testing for more options)
-   -m : run executable to take input from stdin and output from stdout
+    -m : (manual) run executable to take input from stdin and output from stdout
+    -e : (execute) run executable getting standard in from default input1 (located in ./testfiles/testInputFiles/input1.txt)
+    -t : (test) run executable and then run test script (see README section `Testing` for more details)
+    -v : (valgrind) run executable with valgrind leak analysis
 
 ## Run procedure
 
@@ -79,7 +79,7 @@ To compile and run in a single step run: `$ compileApp.sh -e`
 
 This application comes with a built in testing script `testScript.sh`.  To run the script, make sure that `testScript.sh` has execution permissions by running the following command from the project root directory.
 
-`$ testScript.sh -e`
+`$ chmod +x ./testScript.sh`
 
 This project contains 3 test files with their expected outpu in the `testFiles` directory.  
 
@@ -95,9 +95,9 @@ To first run the compiler and then run the testing script
 
 `./compileApp.sh`
 
-If successful, the `line_processor` file will be generated in the project root and then run:
+If successful, the `line_processor` binary file will be generated in the project root and then run:
 
-`testScript.sh`
+`./testScript.sh`
 
 ### Additional information about testing
 

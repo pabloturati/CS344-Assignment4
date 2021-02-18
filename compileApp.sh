@@ -68,12 +68,12 @@ function main() {
   #  v -> run executable with valgrind leak analysis
   #  t -> run executable and then run test script
   #  m -> run executable to take input from stdin and output from stdout
-  while getopts "evtm" flag; do
+  while getopts "metv" flag; do
     case $flag in
-    e) ./$executableFilename <./testFiles/testInputFiles/input1.txt ;;
-    v) valgrind ./$executableFilename ;;
-    t) ./testScript.sh ;;
     m) ./$executableFilename ;;
+    e) ./$executableFilename <./testFiles/testInputFiles/input1.txt ;;
+    t) ./testScript.sh ;;
+    v) valgrind ./$executableFilename ;;
     esac
     shift
   done
