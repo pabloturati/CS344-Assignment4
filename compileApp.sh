@@ -66,17 +66,14 @@ function main() {
   # Param triggers:
   #  e -> run executable getting standard in from input1 testfile
   #  v -> run executable with valgrind leak analysis
-  #  t -> run executable getting standard in from input1 testfile and outputing to sample testfile
-
-  #  r -> run executable with testscript and send results to a report file
-  #  c -> performs only cleaning of compilation files and creted test files
-  while getopts "evtrc" flag; do
+  #  t -> run executable and then run test script
+  #  m -> run executable to take input from stdin and output from stdout
+  while getopts "evtm" flag; do
     case $flag in
-    e) ./$executableFilename <./testfiles/input1.txt ;;
+    e) ./$executableFilename <./testFiles/testInputFiles/input1.txt ;;
     v) valgrind ./$executableFilename ;;
-    t) ./$executableFilename <./testfiles/input1.txt >testfile.txt ;;
-    r) ;;
-    c) ;;
+    t) ./testScript.sh ;;
+    m) ./$executableFilename ;;
     esac
     shift
   done

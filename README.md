@@ -18,23 +18,23 @@ Intercommunication between thereads is done by using the Producer-Consumer appro
 
 This project uses GNU99 compile standards for building the executable.
 
-### Option 1.  Using compile script
+### Option 1.  Using the included compile script
 
-This application includes a bash script to build and deploy the runner (compileApp.sh).  To use it, make sure that this file (compileApp.sh) has execution persmissions by running:
+This application includes a bash script to build and deploy the runner (compileApp.sh).  To use it, first make sure that `compileApp.sh` has execution persmissions by excuting the following command:
 
 `$ chmod +x compileApp.sh`
 
-You may execute the compile instructions by running from the project root:
+You may execute the automated compile instructions by running from the project root:
 
 `$ ./compileApp.sh`
 
-This will generate a `smallsh` exectable file as output. Refer to the next section on how to run the application and pass parameters.
+This will generate a binary executable file named `line_processor` in the root of the project. Refer to the next section on how to run the application and pass parameters.
 
 ### Option 2.  Individual commands
 
 Refer to the contents of `compileApp.sh` for a detailed command list on how to manually compile using command line.  Notice that this project was designed to be compiled with GNU99 standards.
 
-### Option 3.  Compile and run in sigle step
+### Option 3.  Compile and run in single step
 
 `compileApp.sh` accepts the flag `-e`, in which case it will compile, generate the executable and immediately run it.  To do this run:
 
@@ -43,39 +43,98 @@ Refer to the contents of `compileApp.sh` for a detailed command list on how to m
 ### Compile run available commands
 
 The following flags can be passed to the compileApp.sh shell script:
-  - e -> run executable
-  - v -> run executable with valgrind leak analysis
-  - t -> run executable with testscript to stdout
-  - r -> run executable with testscript and send results to a report file
-  - c -> performs only cleaning of compilation files and creted test files
+   -e : run executable getting standard in from input1 testfile
+   -v : run executable with valgrind leak analysis
+   -t : run executable and then run test script (see section Testing for more options)
+   -m : run executable to take input from stdin and output from stdout
 
 ## Run procedure
 
-Once the application executable has been created `smallsh`. It can be run as follows:
+Once the application executable has been created `line_processor`. It can be run as follows:
 
-`$ ./smallsh`
+### To feed input from and print output to the terminal window, run the following command
+`$ ./line_processor`
+
+### To feed input from a file and to print output to the terminal window, run the following command
+
+`$ ./line_processor < path/to/inpuFile`
+
+Note that if input file does not exist, causes an error.
+
+### To feed input from the terminal window and to print output to file, run the following command
+
+`$ ./line_processor > path/to/outputfile`
+
+Note that if outpufile does not exist, the file gets created.
+
+### To feed input from a file and to print output to file, run the following command
+
+`$ ./line_processor < path/to/inpuFile > path/to/outputfile`
+
+Note that if outpufile does not exist, the file gets created.
 
 To compile and run in a single step run: `$ compileApp.sh -e`
+
+## Testing procedure
+
+This application comes with a built in testing script `testScript.sh`.  To run the script, make sure that `testScript.sh` has execution permissions by running the following command from the project root directory.
+
+`$ testScript.sh -e`
+
+This project contains 3 test files with their expected outpu in the `testFiles` directory.  
+
+### To compile and run the test script in a single step
+
+To run the compiler and the test script in a single operation, run the compile app script with the `-t` flag:
+
+`./compileApp.sh -t`
+
+### To compile and then run the test script in a separate step
+
+To first run the compiler and then run the testing script
+
+`./compileApp.sh`
+
+If successful, the `line_processor` file will be generated in the project root and then run:
+
+`testScript.sh`
+
+### Additional information about testing
+
+Testing can be expanded by adding files to the test folders and registering them in the `testScript.sh` file.  File must include an input and an expecte output.
+
+The tests Script uses the shell built in command `cmp` to perform the testing.
 
 ## Additional resources
 
 ## Project File structure
 ```
-root
+Project root
 ├── .gitignore
 ├── compileApp.sh
 ├── main.c
 ├── LICENSE
 ├── README.md
+├── testFiles
+│   ├── testInputFiles
+│   └── testOutputFiles
+├── bufferHandlers
+│   ├── bufferHandlers.c
+│   └── bufferHandlers.h
 ├── constants
 │   ├── constants.c
 │   └── constants.h
-└── builtinFunctions
-    ├── builtinFunctions.c
-    └── builtinFunctions.h
+├── dataProcessingMethods
+│   ├── dataProcessingMethods.c
+│   └── dataProcessingMethods.h
+├── dataProcessingMethods
+│   ├── dataProcessingMethods.c
+│   └── dataProcessingMethods.h
+└── threadHandlerMethods
+    ├── threadHandlerMethods.c
+    └── threadHandlerMethods.h
 ```
-
 
 ## Version control
 
- Link to the repository is available at [here](https://github.com/pabloturati/CS344-Assignment4).  However, due to this being an Oregon State University assignment, it will remain private and public access will become available after April, 2021.
+ Link to the repository is available [here](https://github.com/pabloturati/CS344-Assignment4).  However, due to this being an Oregon State University assignment, it will remain private and public access will become available after April, 2021.

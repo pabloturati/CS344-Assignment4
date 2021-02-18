@@ -66,5 +66,5 @@ README.pdf
 .DS_Store
 
 # Process file outputs
-turatip.movies.*
 testfile.txt
+temporaryGeneratedTestFiles
