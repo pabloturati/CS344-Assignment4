@@ -28,21 +28,19 @@ You may execute the automated compile instructions by running from the project r
 
 `$ ./compileApp.sh`
 
-This will generate a binary executable file named `line_processor` in the root of the project. Refer to the next section on how to run the application and pass parameters.
+This will generate a binary executable file named `line_processor` in the root of the project. Refer to section Compile Commands section below on how to run the application and pass parameters.
 
 ### Option 2.  Individual commands
 
 Refer to the contents of `compileApp.sh` for a detailed command list on how to manually compile using command line.  Notice that this project was designed to be compiled with GNU99 standards.
 
-### Option 3.  Compile and run in single step
+### Option 3.  Compile and run in single step (Compile run commands)
 
 `compileApp.sh` accepts the flag `-e`, in which case it will compile, generate the executable and immediately run it.  To do this run:
 
-`$ compileApp.sh -e`
+`$ ./compileApp.sh -<FLAG>`
 
-### Compile run available commands
-
-The following flags can be passed to the compileApp.sh shell script:
+Where following flags can be passed to the compileApp.sh shell script:
     -m : (manual) run executable to take input from stdin and output from stdout
     -e : (execute) run executable getting standard in from default input1 (located in ./testfiles/testInputFiles/input1.txt)
     -t : (test) run executable and then run test script (see README section `Testing` for more details)
