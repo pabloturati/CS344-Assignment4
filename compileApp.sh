@@ -11,7 +11,11 @@ testOutputFiles="
   "
 
 # Components
-declare -a componentList=("")
+declare -a componentList=(
+  "constants"
+  "dataProcessingMethods"
+  "bufferHandlers"
+)
 
 # Cleans previously compiled files and created folders
 function preCompileClean() {
@@ -51,13 +55,10 @@ function main() {
   preCompileClean
 
   # Compilation step
-  # generateModuleObjectsAndArchive
-  # compileMainAndArchive
+  generateModuleObjectsAndArchive
+  compileMainAndArchive
 
-  # fix remove
-  gcc --std=gnu99 -o $executableFilename $mainFilename
-
-  # Pre cleaning to eliminate temporary files
+  # Post cleaning to eliminate temporary files
   postCompileClean
 
   # Handles parameters to execute.
@@ -69,7 +70,7 @@ function main() {
   #  c -> performs only cleaning of compilation files and creted test files
   while getopts "evtrc" flag; do
     case $flag in
-    e) ./$executableFilename <./testfiles/input1.txt ;;
+    e) ./$executableFilename <./testfiles/input2.txt ;;
     v) valgrind ./$executableFilename ;;
     t) ./$executableFilename <./testfiles/input1.txt >testfile.txt ;;
     r) ;;
