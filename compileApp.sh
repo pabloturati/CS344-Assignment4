@@ -63,14 +63,15 @@ function main() {
 
   # Handles parameters to execute.
   # Param triggers:
-  #  e -> run executable
+  #  e -> run executable getting standard in from input1 testfile
   #  v -> run executable with valgrind leak analysis
-  #  t -> run executable with testscript to stdout
+  #  t -> run executable getting standard in from input1 testfile and outputing to sample testfile
+
   #  r -> run executable with testscript and send results to a report file
   #  c -> performs only cleaning of compilation files and creted test files
   while getopts "evtrc" flag; do
     case $flag in
-    e) ./$executableFilename <./testfiles/input2.txt ;;
+    e) ./$executableFilename <./testfiles/input1.txt ;;
     v) valgrind ./$executableFilename ;;
     t) ./$executableFilename <./testfiles/input1.txt >testfile.txt ;;
     r) ;;

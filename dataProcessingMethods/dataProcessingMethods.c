@@ -11,7 +11,8 @@
 void replaceLineSeparatorBySpace(char *line)
 {
   char *pos = strchr(line, '\n');
-  *pos = ' ';
+  if (pos != NULL)
+    *pos = ' ';
 }
 
 // Replace ++ by ^ helper methods
@@ -67,8 +68,10 @@ void printLimitedCharOutput(char *line)
     strncpy(tempBuff, mergedLine + currIdx + (i * PRINT_SIZE), PRINT_SIZE);
     fprintf(stdout, "%s\n", tempBuff);
   }
-  // If has a remainder, save it
-  if (lineLength % PRINT_SIZE > 0)
+
+  // fprintf(stdout, "HOLA3\n");
+
+  // If has a remainder, save it if (lineLength % PRINT_SIZE > 0)
   {
     rem = calloc(PRINT_SIZE, sizeof(char));
     char *incomStr = &mergedLine[i * PRINT_SIZE];
