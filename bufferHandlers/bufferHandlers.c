@@ -7,6 +7,12 @@
 #include "../constants/constants.h"
 #include "bufferHandlers.h"
 
+/*****   Buffer handlers for conditional variables and mutual exclusion  ****/
+/*****   Reference: Code adapted in parts from CS344 class example: 6_5_prod_cons_pipeline.c-2  https://repl.it/@cs344/65prodconspipelinec ****/
+
+// Buffer 1.  Shared between 'get input' and 'replace line separators' threads
+
+// Puts a line in the shared resource
 void put_buff_1(char *line)
 {
   // Lock the mutex before putting the item in the buffer
@@ -22,6 +28,7 @@ void put_buff_1(char *line)
   pthread_mutex_unlock(&mutex_1);
 }
 
+// Collects (and removes) a line from the shared resource
 char *get_buff_1()
 {
   pthread_mutex_lock(&mutex_1);
@@ -38,9 +45,9 @@ char *get_buff_1()
   return line;
 }
 
-/*
- Put an item in buff_2
-*/
+// Buffer 2.  Shared between 'replace line separators' and 'replace + sign' threads
+
+// Puts a line in the shared resource
 void put_buff_2(char *line)
 {
   // Lock the mutex before putting the item in the buffer
@@ -56,6 +63,7 @@ void put_buff_2(char *line)
   pthread_mutex_unlock(&mutex_2);
 }
 
+// Collects (and removes) a line from the shared resource
 char *get_buff_2()
 {
   pthread_mutex_lock(&mutex_2);
@@ -72,9 +80,9 @@ char *get_buff_2()
   return line;
 }
 
-/*
- Put an item in buff_3
-*/
+// Buffer 3.  Shared between 'replace + sign' and 'print line' threads
+
+// Puts a line in the shared resource
 void put_buff_3(char *line)
 {
   // Lock the mutex before putting the item in the buffer
@@ -90,6 +98,7 @@ void put_buff_3(char *line)
   pthread_mutex_unlock(&mutex_3);
 }
 
+// Collects (and removes) a line from the shared resource
 char *get_buff_3()
 {
   pthread_mutex_lock(&mutex_3);

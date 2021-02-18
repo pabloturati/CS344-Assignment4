@@ -12,7 +12,7 @@
 
 /****** General global variables *******/
 
-// Print to standard out remainder global variable
+// Variable sto store non printed remainder
 char *rem;
 
 /****** Mutex and conditional variables *******/
